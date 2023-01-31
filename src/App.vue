@@ -1,18 +1,17 @@
 <template>
-  <img alt="Vue logo" src="./assets/logo.png">
-  <HelloWorld msg="Welcome to Your Vue.js + TypeScript App"/>
+  <div class="flex flex-col justify-center">
+    <UserList />
+  </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from 'vue';
-import HelloWorld from './components/HelloWorld.vue';
+<script setup lang="ts">
+import UserList from "./components/UserList.vue";
+import Users from "./dummy-data";
+import { provide } from "vue";
 
-export default defineComponent({
-  name: 'App',
-  components: {
-    HelloWorld
-  }
-});
+import { usersKey } from "./assets/InjectionKey";
+
+provide(usersKey, Users);
 </script>
 
 <style>
@@ -23,5 +22,7 @@ export default defineComponent({
   text-align: center;
   color: #2c3e50;
   margin-top: 60px;
+  justify-content: center;
+  flex-basis: auto;
 }
 </style>
