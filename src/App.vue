@@ -1,17 +1,12 @@
 <template>
-  <div class="flex flex-col justify-center">
-    <UserList />
+  <div class="flex grid-cols-2 justify-center">
+    <CurrencyItem :set="1" />
+    <CurrencyItem :set="2" />
   </div>
 </template>
 
 <script setup lang="ts">
-import UserList from "./components/UserList.vue";
-import Users from "./dummy-data";
-import { provide } from "vue";
-
-import { usersKey } from "./assets/InjectionKey";
-
-provide(usersKey, Users);
+import CurrencyItem from "./components/CurrencyItem.vue";
 </script>
 
 <style>
