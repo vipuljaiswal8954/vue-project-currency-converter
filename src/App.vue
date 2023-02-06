@@ -8,47 +8,20 @@
       </h1>
     </div>
     <div class="flex grid-cols-2 justify-center">
-      <div
-        class="w-40 flex flex-col m-8 bg-gray-600 dark:bg-purple-700 dark:border-purple-400"
-      >
-        <select
-          class="dark:bg-black dark:text-white dark:border-purple-400"
-          v-model="selectedCurrency1"
-        >
-          <option
-            v-for="currency in availableCurrency"
-            :value="currency"
-            :key="currency.code"
-          >
-            {{ currency.value }}
-          </option>
-        </select>
-        <input
-          v-model="amount1"
-          type="number"
-          class="dark:bg-black border-solid border-black border-2 h-8 dark:text-white dark:border-purple-400"
-        />
-      </div>
-      <div class="w-40 flex flex-col m-8">
-        <select
-          class="dark:bg-black dark:text-white dark:border-purple-400"
-          v-model="selectedCurrency2"
-        >
-          <option
-            v-for="currency in availableCurrency"
-            :value="currency"
-            :key="currency.code"
-          >
-            {{ currency.value }}
-          </option>
-        </select>
-
-        <input
-          class="dark:bg-black border-solid border-black border-2 h-8 dark:text-white dark:border-purple-400"
-          v-model="amount2"
-          type="number"
-        />
-      </div>
+      <CurencyItem
+        :amount="getAmount1"
+        :availableCurrency="availableCurrency"
+        :selectedCurrency="getCurrency1"
+        @handleAmount="changeAmount1"
+        @handleCurrency="changeCurrency1"
+      />
+      <CurencyItem
+        :amount="getAmount2"
+        :availableCurrency="availableCurrency"
+        :selectedCurrency="getCurrency2"
+        @handleAmount="changeAmount2"
+        @handleCurrency="changeCurrency2"
+      />
     </div>
     <button
       @click="toggleDark()"
@@ -60,43 +33,40 @@
 </template>
 
 <script setup lang="ts">
+import CurencyItem from "./components/CurencyItem.vue";
 import { useDark, useToggle } from "@vueuse/core";
-
-import { ref, reactive, watch } from "vue";
+import { ref, isRef } from "vue";
 import type Currency from "./interfaces/Currency";
 import { useCurrencyStore } from "./store/currency";
 import data from "./currency-data";
+import { storeToRefs } from "pinia";
 const isDark = useDark();
 const toggleDark = useToggle(isDark);
 const store = useCurrencyStore();
 
 const availableCurrency: Currency[] = data;
 
-const { getAmount1, getAmount2, getCurrency1, getCurrency2 } = store;
-const selectedCurrency1 = ref(getCurrency1);
-const selectedCurrency2 = ref(getCurrency2);
-const amount1 = ref(getAmount1);
-const amount2 = ref(getAmount2);
-watch(selectedCurrency1, (newCurrency) => {
-  store.setCurrency1(newCurrency);
-  store.calculateAmount2();
-  amount2.value = store.getAmount2;
-});
-watch(amount1, (newAmount) => {
+const { getAmount1, getAmount2, getCurrency1, getCurrency2 } =
+  storeToRefs(store);
+console.log(isRef(getAmount1));
+
+function changeAmount1(newAmount: number) {
+  console.log("Change Amount1");
   store.setAmount1(newAmount);
   store.calculateAmount2();
-  amount2.value = store.getAmount2;
-});
-watch(selectedCurrency2, (newCurrency) => {
-  store.setCurrency2(newCurrency);
-  store.calculateAmount1();
-  amount1.value = store.getAmount1;
-});
-watch(amount2, (newAmount) => {
+}
+function changeAmount2(newAmount: number) {
   store.setAmount2(newAmount);
   store.calculateAmount1();
-  amount1.value = store.getAmount1;
-});
+}
+function changeCurrency1(newCurrency: Currency) {
+  store.setCurrency1(newCurrency);
+}
+function changeCurrency2(newCurrency: Currency) {
+  console.log("change Currency 2");
+
+  store.setCurrency2(newCurrency);
+}
 </script>
 
 <style>

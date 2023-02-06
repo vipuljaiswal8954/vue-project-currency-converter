@@ -1,21 +1,21 @@
 import { defineStore } from "pinia";
 import type Currency from "../interfaces/Currency";
-import { ref, reactive } from "vue";
+// import { ref, reactive } from "vue";
 
 export const useCurrencyStore = defineStore("currency", {
   state: () => ({
-    currency1: reactive({
+    currency1: {
       value: "Kuwaiti Dinar" as String,
       code: 0 as Number,
       equalIndianRupee: 269.61 as Number,
-    } as Currency),
-    amount1: ref(0),
-    currency2: reactive({
+    } as Currency,
+    amount1: 0,
+    currency2: {
       value: "Kuwaiti Dinar" as String,
       code: 0 as Number,
       equalIndianRupee: 269.61 as Number,
-    } as Currency),
-    amount2: ref(0),
+    } as Currency,
+    amount2: 0,
   }),
   getters: {
     getCurrency1(): Currency {
@@ -35,9 +35,15 @@ export const useCurrencyStore = defineStore("currency", {
     // any amount of arguments, return a promise or not
     setCurrency1(newCurrency: Currency) {
       this.currency1 = newCurrency;
+      this.amount2 =
+        (this.amount1 * this.currency1.equalIndianRupee) /
+        this.currency2.equalIndianRupee;
     },
     setCurrency2(newCurrency: Currency) {
       this.currency2 = newCurrency;
+      this.amount1 =
+        (this.amount2 * this.currency2.equalIndianRupee) /
+        this.currency1.equalIndianRupee;
     },
     setAmount1(newAmount: number) {
       this.amount1 = newAmount;
