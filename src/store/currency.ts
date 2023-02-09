@@ -4,12 +4,14 @@ import type Currency from "../interfaces/Currency";
 
 export const useCurrencyStore = defineStore("currency", {
   state: () => ({
+    //component 1 state
     currency1: {
       value: "Kuwaiti Dinar" as String,
       code: 0 as Number,
       equalIndianRupee: 269.61 as Number,
     } as Currency,
     amount1: 0,
+    //component 2 state
     currency2: {
       value: "Kuwaiti Dinar" as String,
       code: 0 as Number,
@@ -32,7 +34,6 @@ export const useCurrencyStore = defineStore("currency", {
     },
   },
   actions: {
-    // any amount of arguments, return a promise or not
     setCurrency1(newCurrency: Currency) {
       this.currency1 = newCurrency;
       this.calculateAmount2();
@@ -47,11 +48,13 @@ export const useCurrencyStore = defineStore("currency", {
     setAmount2(newAmount: number) {
       this.amount2 = newAmount;
     },
+    // store function to calculate amount 1
     calculateAmount1() {
       this.amount1 =
         (this.amount2 * this.currency2.equalIndianRupee) /
         this.currency1.equalIndianRupee;
     },
+    // store function to calculate amount 2
     calculateAmount2() {
       this.amount2 =
         (this.amount1 * this.currency1.equalIndianRupee) /
